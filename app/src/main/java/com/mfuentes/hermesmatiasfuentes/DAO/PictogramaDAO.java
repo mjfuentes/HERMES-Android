@@ -31,8 +31,8 @@ public class PictogramaDAO {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String[] projection = {
                 PictogramaEntry._ID,
-                PictogramaEntry.COLUMN_NAME_AUDIO,
                 PictogramaEntry.COLUMN_NAME_IMAGEN,
+                PictogramaEntry.COLUMN_NAME_AUDIO,
                 PictogramaEntry.COLUMN_NAME_CATEGORIA,
                 PictogramaEntry.COLUMN_NAME_DESCRIPCION,
         };

@@ -11,8 +11,6 @@ public class Pictograma {
     private String imagen;
     private String audio;
     private String descripcion;
-
-
     private Categoria categoria;
 
     public Pictograma(Long id, String imagen, String audio, String descripcion, Categoria categoria) {

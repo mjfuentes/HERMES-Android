@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class DBHelper extends SQLiteOpenHelper {
     private Context context;
@@ -38,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
             " ); ";
 
     public DBHelper(Context context) {
-        super(context, "Hermes.db", null, 3);
+        super(context, "Hermes.db", null, 5);
         this.context = context;
     }
 
@@ -61,23 +63,23 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void populatePictogramas(SQLiteDatabase db) throws IOException {
-        FileReader file = new FileReader("csv");
-        BufferedReader buffer = new BufferedReader(file);
+        InputStream csvStream = context.getAssets().open("pictogramas.csv");
+        InputStreamReader csvStreamReader = new InputStreamReader(csvStream);
+        BufferedReader buffer = new BufferedReader(csvStreamReader);
         String line = "";
         String tableName = "pictograma";
-        String columns = "_id, descripcion, categoria, imagen, audio";
+        String columns = "descripcion, categoria, imagen, audio";
         String str1 = "INSERT INTO " + tableName + " (" + columns + ") values(";
         String str2 = ");";
 
         db.beginTransaction();
         while ((line = buffer.readLine()) != null) {
             StringBuilder sb = new StringBuilder(str1);
-            String[] str = line.split(",");
+            String[] str = line.split(";");
+            sb.append("'" + str[2] + "',");
+            sb.append(str[3] + ",");
             sb.append("'" + str[0] + "',");
-            sb.append(str[1] + "',");
-            sb.append(str[2] + "',");
-            sb.append(str[3] + "'");
-            sb.append(str[4] + "'");
+            sb.append("'" + str[1] + "'");
             sb.append(str2);
             db.execSQL(sb.toString());
         }

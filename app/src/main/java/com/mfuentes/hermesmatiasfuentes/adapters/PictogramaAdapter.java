@@ -48,7 +48,8 @@ public class PictogramaAdapter extends BaseAdapter {
             view = convertView;
         }
         ImageView imagen = (ImageView) view.findViewById(R.id.imagen_pictograma);
-        final int resourceId =  context.getResources().getIdentifier(pictogramas.get(position).getImagen(), "drawable", context.getPackageName());
+        String imageName = pictogramas.get(position).getImagen().split("\\.")[0];
+        final int resourceId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
         imagen.setImageResource(resourceId);
         return view;
     }

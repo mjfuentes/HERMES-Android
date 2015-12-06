@@ -11,4 +11,13 @@ public enum Tamaño {
     public int getNumero() {
         return numero;
     }
+
+    public static Tamaño fromNumero(int num){
+        for (Tamaño tam:Tamaño.values()){
+            if (tam.getNumero() == num){
+                return tam;
+            }
+        }
+        return null;
+    }
 }

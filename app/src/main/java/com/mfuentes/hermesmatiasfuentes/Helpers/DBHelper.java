@@ -4,33 +4,84 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.mfuentes.hermesmatiasfuentes.model.Alumno;
+import com.mfuentes.hermesmatiasfuentes.DAO.PictogramaDAO;
+import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
+import com.mfuentes.hermesmatiasfuentes.model.Alumno.AlumnoEntry;
+import com.mfuentes.hermesmatiasfuentes.model.Pictograma;
+import com.mfuentes.hermesmatiasfuentes.model.Pictograma.PictogramaEntry;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class DBHelper extends SQLiteOpenHelper {
-
+    private Context context;
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + Alumno.AlumnoEntry.TABLE_NAME + " (" +
-                    Alumno.AlumnoEntry._ID + " INTEGER PRIMARY KEY," +
-                    Alumno.AlumnoEntry.COLUMN_NAME_NOMBRE + TEXT_TYPE + COMMA_SEP +
-                    Alumno.AlumnoEntry.COLUMN_NAME_APELLIDO + TEXT_TYPE + COMMA_SEP +
-                    Alumno.AlumnoEntry.COLUMN_NAME_SEXO + INTEGER_TYPE + COMMA_SEP +
-                    Alumno.AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO + INTEGER_TYPE + COMMA_SEP +
-            " )";
+    private static final String CREATE_TABLE_ALUMNO =
+            "CREATE TABLE " + AlumnoEntry.TABLE_NAME + " (" +
+                    AlumnoEntry._ID + " INTEGER PRIMARY KEY," +
+                    AlumnoEntry.COLUMN_NAME_NOMBRE + TEXT_TYPE + COMMA_SEP +
+                    AlumnoEntry.COLUMN_NAME_APELLIDO + TEXT_TYPE + COMMA_SEP +
+                    AlumnoEntry.COLUMN_NAME_SEXO + INTEGER_TYPE + COMMA_SEP +
+                    AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO + INTEGER_TYPE +
+            " );";
+    private static final String CREATE_TABLE_PICTOGRAMA =
+            "CREATE TABLE " + PictogramaEntry.TABLE_NAME + " (" +
+            PictogramaEntry._ID + " INTEGER PRIMARY KEY," +
+            PictogramaEntry.COLUMN_NAME_DESCRIPCION + TEXT_TYPE + COMMA_SEP +
+            PictogramaEntry.COLUMN_NAME_CATEGORIA + INTEGER_TYPE + COMMA_SEP +
+            PictogramaEntry.COLUMN_NAME_IMAGEN + TEXT_TYPE + COMMA_SEP +
+            PictogramaEntry.COLUMN_NAME_AUDIO + TEXT_TYPE +
+            " ); ";
 
     public DBHelper(Context context) {
-        super(context, "Hermes.db", null, 1);
+        super(context, "Hermes.db", null, 3);
+        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(CREATE_TABLE_ALUMNO);
+        db.execSQL(CREATE_TABLE_PICTOGRAMA);
+        try {
+            populatePictogramas(db);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + AlumnoEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PictogramaEntry.TABLE_NAME);
+        onCreate(db);
+    }
 
+    private void populatePictogramas(SQLiteDatabase db) throws IOException {
+        FileReader file = new FileReader("csv");
+        BufferedReader buffer = new BufferedReader(file);
+        String line = "";
+        String tableName = "pictograma";
+        String columns = "_id, descripcion, categoria, imagen, audio";
+        String str1 = "INSERT INTO " + tableName + " (" + columns + ") values(";
+        String str2 = ");";
+
+        db.beginTransaction();
+        while ((line = buffer.readLine()) != null) {
+            StringBuilder sb = new StringBuilder(str1);
+            String[] str = line.split(",");
+            sb.append("'" + str[0] + "',");
+            sb.append(str[1] + "',");
+            sb.append(str[2] + "',");
+            sb.append(str[3] + "'");
+            sb.append(str[4] + "'");
+            sb.append(str2);
+            db.execSQL(sb.toString());
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 }

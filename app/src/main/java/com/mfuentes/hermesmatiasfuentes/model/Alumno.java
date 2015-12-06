@@ -18,6 +18,14 @@ public class Alumno {
     private Tamaño tamPreferido;
     private List<Solapa> solapasHabilitadas;
 
+    public Alumno(String nombre, String apellido,Sexo sexo, Tamaño tamPreferido, List<Solapa> solapas){
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.sexo = sexo;
+        this.tamPreferido = tamPreferido;
+        this.solapasHabilitadas = solapas;
+    }
+
     public Alumno(Long id, String nombre, String apellido,Sexo sexo, Tamaño tamPreferido, List<Solapa> solapas){
         this.id = id;
         this.nombre = nombre;
@@ -53,6 +61,11 @@ public class Alumno {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return getNombre() + " " + getApellido();
     }
 
     public static abstract class AlumnoEntry implements BaseColumns {

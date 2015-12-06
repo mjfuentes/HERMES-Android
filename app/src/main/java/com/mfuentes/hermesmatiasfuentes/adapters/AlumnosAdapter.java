@@ -1,74 +1,68 @@
 package com.mfuentes.hermesmatiasfuentes.adapters;
 
+import android.content.Context;
 import android.database.DataSetObserver;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
-/**
- * Created by matias on 05/12/15.
- */
-public class AlumnosAdapter implements ListAdapter {
+import com.mfuentes.hermesmatiasfuentes.DAO.AlumnoDAO;
+import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 
-    private static String[] fakeData = {"Pedro","Martin","Juan","Franco"};
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
+public class AlumnosAdapter extends BaseAdapter implements Observer {
 
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
+    private List<Alumno> alumnos;
+    private Context context;
 
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-
+    public AlumnosAdapter(Context context){
+        this.context = context;
+        this.alumnos = AlumnoDAO.getInstance().getAlumnos(context);
     }
 
     @Override
     public int getCount() {
-        return fakeData.length;
+        return alumnos.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return fakeData[position];
+        return alumnos.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
+        return alumnos.get(position).getId();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        View view;
+        TextView text;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        if (convertView == null) {
+            view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        } else {
+            view = convertView;
+        }
+        text = (TextView) view.findViewById(android.R.id.text1);
+        Alumno alumno = (Alumno) getItem(position);
+        text.setText(alumno.toString());
+
+        return view;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
+    public void update(Observable observable, Object data) {
+        this.alumnos = AlumnoDAO.getInstance().getAlumnos(context);
+        notifyDataSetChanged();
     }
 }

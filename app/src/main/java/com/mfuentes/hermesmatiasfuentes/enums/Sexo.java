@@ -11,4 +11,13 @@ public enum Sexo {
     public int getNumero() {
         return numero;
     }
+
+    public static Sexo fromNumero(int num){
+        for (Sexo sexo:Sexo.values()){
+            if (sexo.getNumero() == num){
+                return sexo;
+            }
+        }
+        return null;
+    }
 }

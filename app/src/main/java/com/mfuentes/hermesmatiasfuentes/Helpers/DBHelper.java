@@ -29,18 +29,21 @@ public class DBHelper extends SQLiteOpenHelper {
                     AlumnoEntry.COLUMN_NAME_APELLIDO + TEXT_TYPE + COMMA_SEP +
                     AlumnoEntry.COLUMN_NAME_SEXO + INTEGER_TYPE + COMMA_SEP +
                     AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO + INTEGER_TYPE +
-            " );";
+                    " );";
     private static final String CREATE_TABLE_PICTOGRAMA =
             "CREATE TABLE " + PictogramaEntry.TABLE_NAME + " (" +
-            PictogramaEntry._ID + " INTEGER PRIMARY KEY," +
-            PictogramaEntry.COLUMN_NAME_DESCRIPCION + TEXT_TYPE + COMMA_SEP +
-            PictogramaEntry.COLUMN_NAME_CATEGORIA + INTEGER_TYPE + COMMA_SEP +
-            PictogramaEntry.COLUMN_NAME_IMAGEN + TEXT_TYPE + COMMA_SEP +
-            PictogramaEntry.COLUMN_NAME_AUDIO + TEXT_TYPE +
-            " ); ";
+                    PictogramaEntry._ID + " INTEGER PRIMARY KEY," +
+                    PictogramaEntry.COLUMN_NAME_DESCRIPCION + TEXT_TYPE + COMMA_SEP +
+                    PictogramaEntry.COLUMN_NAME_CATEGORIA + INTEGER_TYPE + COMMA_SEP +
+                    PictogramaEntry.COLUMN_NAME_IMAGEN + TEXT_TYPE + COMMA_SEP +
+                    PictogramaEntry.COLUMN_NAME_AUDIO + TEXT_TYPE +
+                    " ); ";
+
+    private static final String CREATE_TABLE_PICTOGRAMA_ALUMNO =
+            "CREATE TABLE pictograma_alumno (_id INTEGER PRIMARY KEY, pictograma_id INTEGER, alumno_id INTEGER);";
 
     public DBHelper(Context context) {
-        super(context, "Hermes.db", null, 5);
+        super(context, "Hermes.db", null, 8);
         this.context = context;
     }
 
@@ -48,6 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_ALUMNO);
         db.execSQL(CREATE_TABLE_PICTOGRAMA);
+        db.execSQL(CREATE_TABLE_PICTOGRAMA_ALUMNO);
         try {
             populatePictogramas(db);
         } catch (IOException e) {
@@ -59,6 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + AlumnoEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PictogramaEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS pictograma_alumno");
         onCreate(db);
     }
 

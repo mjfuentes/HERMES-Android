@@ -13,12 +13,16 @@ public class Pictograma {
     private String descripcion;
     private Categoria categoria;
 
-    public Pictograma(Long id, String imagen, String audio, String descripcion, Categoria categoria) {
+
+    private boolean seleccionado;
+
+    public Pictograma(Long id, String imagen, String audio, String descripcion, Categoria categoria, boolean seleccionado) {
         this.id = id;
         this.imagen = imagen;
         this.audio = audio;
         this.descripcion = descripcion;
         this.categoria = categoria;
+        this.seleccionado = seleccionado;
     }
 
     public Pictograma(String imagen, String audio, String descripcion, Categoria categoria) {
@@ -26,6 +30,7 @@ public class Pictograma {
         this.audio = audio;
         this.descripcion = descripcion;
         this.categoria = categoria;
+        this.seleccionado = false;
     }
 
 
@@ -50,6 +55,10 @@ public class Pictograma {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public boolean isSeleccionado() {
+        return seleccionado;
     }
 
     public static abstract class PictogramaEntry implements BaseColumns {

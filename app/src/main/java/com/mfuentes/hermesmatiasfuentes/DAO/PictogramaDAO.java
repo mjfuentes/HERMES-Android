@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
 import com.mfuentes.hermesmatiasfuentes.Helpers.DBHelper;
 import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
 import com.mfuentes.hermesmatiasfuentes.enums.Sexo;
 import com.mfuentes.hermesmatiasfuentes.enums.Solapa;
 import com.mfuentes.hermesmatiasfuentes.enums.Tamaño;
+import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 import com.mfuentes.hermesmatiasfuentes.model.Pictograma;
 import com.mfuentes.hermesmatiasfuentes.model.Pictograma.PictogramaEntry;
 
@@ -47,14 +49,40 @@ public class PictogramaDAO {
                 null
         );
 
+
         List<Pictograma> lista = new ArrayList<>();
         while (c.moveToNext()){
             Categoria categoria= Categoria.fromNumero(c.getInt(3));
-            lista.add( new Pictograma(c.getLong(0), c.getString(1), c.getString(2), c.getString(4), categoria));
-
+            boolean seleccionado = CurrentUser.getInstance().estaVisible(c.getLong(0));
+            lista.add( new Pictograma(c.getLong(0), c.getString(1), c.getString(2), c.getString(4), categoria,seleccionado));
         }
+        db.close();
+        return lista;
+    }
 
-       return lista;
+    public List<Long> getVisibles(Context context, Alumno alumno){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        String[] projection = {
+                "pictograma_id",
+        };
+
+        Cursor c = db.query(
+                "pictograma_alumno",
+                projection,
+                "alumno_id = ?",
+                new String[]{String.valueOf(alumno.getId())},
+                null,
+                null,
+                null
+        );
+
+        List<Long> lista = new ArrayList<>();
+        while (c.moveToNext()){
+            lista.add(c.getLong(0));
+        }
+        db.close();
+        return lista;
     }
 
     public Pictograma insertPictograma(Context context, Pictograma pictograma){
@@ -67,7 +95,25 @@ public class PictogramaDAO {
         values.put(PictogramaEntry.COLUMN_NAME_DESCRIPCION, pictograma.getDescripcion());
         long newRowId = db.insert(PictogramaEntry.TABLE_NAME, null, values);
         pictograma.setId(newRowId);
+        db.close();
         return pictograma;
+    }
+
+    public void addVisible(Context context, Long pictograma_id){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("alumno_id", CurrentUser.getInstance().getAlumno().getId());
+        values.put("pictograma_id", pictograma_id);
+        db.insert("pictograma_alumno", null, values);
+        db.close();
+    }
+
+    public void removeVisible(Context context, Long pictograma_id){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        db.delete("pictograma_alumno", "pictograma_id=" + pictograma_id + " AND alumno_id=" + CurrentUser.getInstance().getAlumno().getId(), null);
+        db.close();
     }
 
     public Pictograma getPictograma(Context context, Long id){
@@ -75,8 +121,8 @@ public class PictogramaDAO {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String[] projection = {
                 PictogramaEntry._ID,
-                PictogramaEntry.COLUMN_NAME_AUDIO,
                 PictogramaEntry.COLUMN_NAME_IMAGEN,
+                PictogramaEntry.COLUMN_NAME_AUDIO,
                 PictogramaEntry.COLUMN_NAME_CATEGORIA,
                 PictogramaEntry.COLUMN_NAME_DESCRIPCION,
         };
@@ -93,11 +139,19 @@ public class PictogramaDAO {
 
         if (c.moveToFirst()){
             Categoria categoria= Categoria.fromNumero(c.getInt(3));
-            return new Pictograma(c.getLong(0), c.getString(1), c.getString(2), c.getString(4), categoria);
+            boolean seleccionado = CurrentUser.getInstance().estaVisible(c.getLong(0));
+            return new Pictograma(c.getLong(0), c.getString(1), c.getString(2), c.getString(4), categoria,seleccionado);
         }
-
+        db.close();
         return null;
+    }
 
+    public List<Pictograma> getPictogramas(Context contexto, List<Long> ids){
+        List<Pictograma> pictogramas = new ArrayList<>();
+        for (Long id:ids){
+            pictogramas.add(getPictograma(contexto,id));
+        }
+        return pictogramas;
     }
 
 }

@@ -54,7 +54,8 @@ public class AlumnoDAO extends Observable{
             lista.add(new Alumno(c.getLong(0), c.getString(1), c.getString(2), sexo, tam, new ArrayList<Solapa>()));
         }
 
-       return lista;
+        db.close();
+        return lista;
     }
 
     public Alumno insertAlumno(Context context, Alumno alumno){
@@ -66,6 +67,7 @@ public class AlumnoDAO extends Observable{
         values.put(AlumnoEntry.COLUMN_NAME_SEXO, alumno.getSexo().getNumero());
         values.put(AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO, alumno.getTamPreferido().getNumero());
         long newRowId = db.insert(AlumnoEntry.TABLE_NAME, null, values);
+        db.close();
         alumno.setId(newRowId);
         this.setChanged();
         this.notifyObservers();
@@ -96,6 +98,7 @@ public class AlumnoDAO extends Observable{
         if (c.moveToFirst()){
             Sexo sexo = Sexo.fromNumero(c.getInt(3));
             Tamaño tam = Tamaño.fromNumero(c.getInt(4));
+            db.close();
             return new Alumno(c.getLong(0), c.getString(1), c.getString(2), sexo, tam, new ArrayList<Solapa>());
         }
 

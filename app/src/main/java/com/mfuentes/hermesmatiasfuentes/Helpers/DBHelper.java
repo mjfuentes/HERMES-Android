@@ -45,8 +45,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_CONFIGURACION =
             "CREATE TABLE configuracion (_id INTEGER PRIMARY KEY, alumno_id INTEGER, ip TEXT, puerto TEXT);";
 
+    private static final String CREATE_TABLE_CATEGORIA_ALUMNO =
+            "CREATE TABLE categoria_alumno (_id INTEGER PRIMARY KEY, categoria_id INTEGER, alumno_id INTEGER);";
+
     public DBHelper(Context context) {
-        super(context, "Hermes.db", null, 13);
+        super(context, "Hermes.db", null, 15);
         this.context = context;
     }
 
@@ -56,6 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PICTOGRAMA);
         db.execSQL(CREATE_TABLE_PICTOGRAMA_ALUMNO);
         db.execSQL(CREATE_TABLE_CONFIGURACION);
+        db.execSQL(CREATE_TABLE_CATEGORIA_ALUMNO);
         try {
             populatePictogramas(db);
         } catch (IOException e) {
@@ -68,6 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AlumnoEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PictogramaEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS pictograma_alumno");
+        db.execSQL("DROP TABLE IF EXISTS categoria_alumno");
         db.execSQL("DROP TABLE IF EXISTS configuracion");
         onCreate(db);
     }

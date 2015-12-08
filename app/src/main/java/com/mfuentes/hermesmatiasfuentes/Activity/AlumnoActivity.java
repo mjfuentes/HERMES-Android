@@ -4,7 +4,6 @@ package com.mfuentes.hermesmatiasfuentes.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,17 +11,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 
 import com.mfuentes.hermesmatiasfuentes.DAO.AlumnoDAO;
+import com.mfuentes.hermesmatiasfuentes.DAO.CategoriaDAO;
 import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
 import com.mfuentes.hermesmatiasfuentes.R;
 import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
-import com.mfuentes.hermesmatiasfuentes.fragments.AlumnoFragment;
-import com.mfuentes.hermesmatiasfuentes.fragments.TerapeutaFragment;
+import com.mfuentes.hermesmatiasfuentes.fragments.CategoriaAlumnoFragment;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 import com.mfuentes.hermesmatiasfuentes.model.Configuracion;
+
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 public class AlumnoActivity extends AppCompatActivity {
 
@@ -39,10 +40,11 @@ public class AlumnoActivity extends AppCompatActivity {
         Long alumno_id = intent.getLongExtra("ALUMNO_ID", (long) 0);
         Alumno alumno = AlumnoDAO.getInstance().getAlumno(this, alumno_id);
         Configuracion configuracion = AlumnoDAO.getInstance().getConfig(this,alumno_id);
-        CurrentUser.setAlumno(getBaseContext(),alumno);
+        CurrentUser.setAlumno(getBaseContext(), alumno);
         CurrentUser.getInstance().setConfiguracion(configuracion);
         actionBar.setTitle(alumno.getNombre() + " " + alumno.getApellido());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        CategoriaDAO.getInstance().addObserver(mSectionsPagerAdapter);
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(0);
@@ -111,30 +113,42 @@ public class AlumnoActivity extends AppCompatActivity {
         return true;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements Observer {
+
+        List<Categoria> categorias = CurrentUser.getInstance().getCategorias();
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+
         }
 
         @Override
         public Fragment getItem(int position) {
-            return AlumnoFragment.newInstance(true);
+            if (position < categorias.size()){
+                return CategoriaAlumnoFragment.newInstance(categorias.get(position));
+            } else {
+                return CategoriaAlumnoFragment.newInstance(null);
+            }
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return categorias.size() + 1;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return CurrentUser.getInstance().getAlumno().getNombre().toUpperCase();
+            if (position < categorias.size()){
+                return categorias.get(position).toString();
+            } else {
+                return CurrentUser.getInstance().getAlumno().getNombre().toUpperCase();
+            }
         }
 
-        public void refresh(){
-
+        @Override
+        public void update(Observable observable, Object data) {
+            categorias = CurrentUser.getInstance().getCategorias();
+            notifyDataSetChanged();
         }
-
     }
 }

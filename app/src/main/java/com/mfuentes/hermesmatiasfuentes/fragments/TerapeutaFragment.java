@@ -43,7 +43,7 @@ public class TerapeutaFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         gridview = (GridView) rootView.findViewById(R.id.gridView);
         gridview.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,false);
+        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,false, null);
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

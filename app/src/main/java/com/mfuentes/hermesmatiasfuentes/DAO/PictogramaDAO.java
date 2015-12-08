@@ -81,6 +81,24 @@ public class PictogramaDAO {
         while (c.moveToNext()){
             lista.add(c.getLong(0));
         }
+        c.close();
+        db.close();
+        return lista;
+    }
+
+    public List<Pictograma> getVisibles(Context context, Alumno alumno,Categoria categoria){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+
+        String MY_QUERY = "SELECT * FROM pictograma a INNER JOIN pictograma_alumno p ON a._id=p.pictograma_id WHERE a.categoria=? AND p.alumno_id=?";
+
+        Cursor c = db.rawQuery(MY_QUERY, new String[]{String.valueOf(categoria.getNumero()),String.valueOf(alumno.getId())});
+
+        List<Pictograma> lista = new ArrayList<>();
+        while (c.moveToNext()){
+            lista.add( new Pictograma(c.getLong(0),c.getString(3),c.getString(4), c.getString(2), categoria,true));
+        }
+        c.close();
         db.close();
         return lista;
     }

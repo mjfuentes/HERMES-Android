@@ -3,22 +3,17 @@ package com.mfuentes.hermesmatiasfuentes.Activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.mfuentes.hermesmatiasfuentes.DAO.AlumnoDAO;
-import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
 import com.mfuentes.hermesmatiasfuentes.R;
 import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
+import com.mfuentes.hermesmatiasfuentes.fragments.CategoriaTerapeutaFragment;
 import com.mfuentes.hermesmatiasfuentes.fragments.TerapeutaFragment;
-import com.mfuentes.hermesmatiasfuentes.fragments.AlumnoFragment;
-import com.mfuentes.hermesmatiasfuentes.model.Alumno;
+import com.mfuentes.hermesmatiasfuentes.fragments.CategoriaAlumnoFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 4){
-                return AlumnoFragment.newInstance(false);
+                return CategoriaTerapeutaFragment.newInstance();
             } else {
                 return TerapeutaFragment.newInstance(categorias[position]);
             }

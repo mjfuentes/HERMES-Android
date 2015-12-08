@@ -5,14 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
 import com.mfuentes.hermesmatiasfuentes.Helpers.DBHelper;
+import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
 import com.mfuentes.hermesmatiasfuentes.enums.Sexo;
 import com.mfuentes.hermesmatiasfuentes.enums.Solapa;
 import com.mfuentes.hermesmatiasfuentes.enums.Tamaño;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno.AlumnoEntry;
 import com.mfuentes.hermesmatiasfuentes.model.Configuracion;
+import com.mfuentes.hermesmatiasfuentes.model.Pictograma;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,11 +138,39 @@ public class AlumnoDAO extends Observable{
         return null;
     }
 
-    public void updateValue(Context context, String field, Object value){
+    public List<Categoria> getCategoriasHabilitadas(Context context, Long id){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        String[] projection = {
+                "categoria_id",
+        };
+
+        Cursor c = db.query(
+                "categoria_alumno",
+                projection,
+                "alumno_id = ?",
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                null
+        );
+
+        List<Categoria> lista = new ArrayList<>();
+        while (c.moveToNext()){
+            lista.add(Categoria.fromNumero(c.getInt(0)));
+        }
+        c.close();
+        db.close();
+        return lista;
+    }
+
+
+
+    public void updateValue(Context context, String field, Object value, Long id){
         DBHelper mDBHelper = new DBHelper(context);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         String valor = (String) value;
-        String strFilter = "_id=" + CurrentUser.getInstance().getAlumno().getId();
+        String strFilter = "_id=" + id;
         ContentValues args = new ContentValues();
         args.put(field, valor);
         db.update("alumno", args, strFilter, null);
@@ -150,11 +179,11 @@ public class AlumnoDAO extends Observable{
         notifyObservers();
     }
 
-    public void updateConfig(Context context, String field, Object value){
+    public void updateConfig(Context context, String field, Object value, Long id){
         DBHelper mDBHelper = new DBHelper(context);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         String valor = (String) value;
-        String strFilter = "alumno_id=" + CurrentUser.getInstance().getAlumno().getId();
+        String strFilter = "alumno_id=" + id;
         ContentValues args = new ContentValues();
         args.put(field, valor);
         db.update("configuracion", args, strFilter, null);

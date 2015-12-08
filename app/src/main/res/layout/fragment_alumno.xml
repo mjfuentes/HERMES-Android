@@ -12,7 +12,8 @@
         android:choiceMode="multipleChoice"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/relativeLayout" />
+        android:layout_toStartOf="@+id/relativeLayout"
+        android:layout_marginLeft="30dp" />
 
     <RelativeLayout
         android:layout_width="200dp"

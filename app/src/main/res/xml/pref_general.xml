@@ -1,0 +1,65 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Alumn@">
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:inputType="textCapWords"
+            android:key="nombre"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Nombre" />
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:inputType="textCapWords"
+            android:key="apellido"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Apellido" />
+
+        <ListPreference
+            android:entries="@array/pref_sexo_entries"
+            android:key="sexo"
+            android:summary="%s"
+            android:entryValues="@array/pref_sexo_values"
+            android:title="Sexo" />
+
+        <ListPreference
+            android:entries="@array/pref_tamaño_entries"
+            android:key="tamano_preferido"
+            android:summary="%s"
+            android:entryValues="@array/pref_tamaño_values"
+            android:title="Tamaño de pictogramas" />
+
+        <MultiSelectListPreference
+            android:entries="@array/pref_categorias_entries"
+            android:key="categorias"
+            android:entryValues="@array/pref_categorias_values"
+            android:title="Categorias habilitadas" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Configuracion General">
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="ip"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Direccion IP del Monitor" />
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="puerto"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Puerto del Monitor" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

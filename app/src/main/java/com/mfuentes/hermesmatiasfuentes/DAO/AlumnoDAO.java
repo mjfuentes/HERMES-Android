@@ -5,15 +5,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
 import com.mfuentes.hermesmatiasfuentes.Helpers.DBHelper;
 import com.mfuentes.hermesmatiasfuentes.enums.Sexo;
 import com.mfuentes.hermesmatiasfuentes.enums.Solapa;
 import com.mfuentes.hermesmatiasfuentes.enums.Tamaño;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno.AlumnoEntry;
+import com.mfuentes.hermesmatiasfuentes.model.Configuracion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Observable;
 
 public class AlumnoDAO extends Observable{
@@ -67,8 +70,11 @@ public class AlumnoDAO extends Observable{
         values.put(AlumnoEntry.COLUMN_NAME_SEXO, alumno.getSexo().getNumero());
         values.put(AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO, alumno.getTamPreferido().getNumero());
         long newRowId = db.insert(AlumnoEntry.TABLE_NAME, null, values);
-        db.close();
         alumno.setId(newRowId);
+        ContentValues config = new ContentValues();
+        config.put("alumno_id", alumno.getId());
+        db.insert("configuracion", null, config);
+        db.close();
         this.setChanged();
         this.notifyObservers();
         return alumno;
@@ -103,7 +109,58 @@ public class AlumnoDAO extends Observable{
         }
 
         return null;
+    }
 
+    public Configuracion getConfig(Context context, Long id){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        String[] projection = {
+                "ip",
+                "puerto"
+        };
+
+        Cursor c = db.query(
+                "configuracion",
+                projection,
+                "alumno_id = ?",
+                new String[]{id.toString()},
+                null,
+                null,
+                null
+        );
+
+        if (c.moveToFirst()){
+            db.close();
+            return new Configuracion(c.getString(0),c.getString(1));
+        }
+
+        return null;
+    }
+
+    public void updateValue(Context context, String field, Object value){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        String valor = (String) value;
+        String strFilter = "_id=" + CurrentUser.getInstance().getAlumno().getId();
+        ContentValues args = new ContentValues();
+        args.put(field, valor);
+        db.update("alumno", args, strFilter, null);
+        db.close();
+        setChanged();
+        notifyObservers();
+    }
+
+    public void updateConfig(Context context, String field, Object value){
+        DBHelper mDBHelper = new DBHelper(context);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        String valor = (String) value;
+        String strFilter = "alumno_id=" + CurrentUser.getInstance().getAlumno().getId();
+        ContentValues args = new ContentValues();
+        args.put(field, valor);
+        db.update("configuracion", args, strFilter, null);
+        db.close();
+        setChanged();
+        notifyObservers();
     }
 
 }

@@ -1,20 +1,26 @@
 package com.mfuentes.hermesmatiasfuentes.Helpers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
+import com.mfuentes.hermesmatiasfuentes.DAO.AlumnoDAO;
 import com.mfuentes.hermesmatiasfuentes.DAO.PictogramaDAO;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno;
+import com.mfuentes.hermesmatiasfuentes.model.Configuracion;
 import com.mfuentes.hermesmatiasfuentes.model.Pictograma;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
-public class CurrentUser extends Observable{
+public class CurrentUser extends Observable implements Observer{
 
     private Alumno alumno;
+    private Configuracion configuracion;
     private Context contexto;
     private List<Long> pictogramasVisibles;
     private static CurrentUser instance;
+
     public  List<Long> getPictogramasVisibles() {
         if (pictogramasVisibles == null){
             pictogramasVisibles = PictogramaDAO.getInstance().getVisibles(contexto,alumno);
@@ -22,11 +28,16 @@ public class CurrentUser extends Observable{
         return pictogramasVisibles;
     }
 
+    public CurrentUser(){
+        AlumnoDAO.getInstance().addObserver(this);
+    }
+
     public static void setAlumno(Context contexto, Alumno alumno){
         instance = new CurrentUser();
         instance.contexto = contexto;
         instance.alumno = alumno;
     }
+
 
     public static CurrentUser getInstance(){
         return instance;
@@ -54,4 +65,25 @@ public class CurrentUser extends Observable{
         return alumno;
     }
 
+    public Configuracion getConfiguracion() {
+        return configuracion;
+    }
+
+    public void updateValue(String field, Object value){
+        AlumnoDAO.getInstance().updateValue(contexto,field,value);
+    }
+
+    public void updateConfig(String field, Object value){
+        AlumnoDAO.getInstance().updateConfig(contexto, field, value);
+    }
+
+    public void setConfiguracion(Configuracion configuracion){
+        this.configuracion = configuracion;
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        this.alumno = AlumnoDAO.getInstance().getAlumno(contexto,this.alumno.getId());
+        this.configuracion = AlumnoDAO.getInstance().getConfig(contexto,this.alumno.getId());
+    }
 }

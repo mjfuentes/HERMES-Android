@@ -53,8 +53,7 @@ public class PictogramaAdapter extends BaseAdapter implements Observer{
             view = convertView;
         }
         ImageView imagen = (ImageView) view.findViewById(R.id.imagen_pictograma);
-        String imageName = pictogramas.get(position).getImagen().split("\\.")[0];
-        final int resourceId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        final int resourceId =  context.getResources().getIdentifier(pictogramas.get(position).getImagen(), "drawable", context.getPackageName());
         imagen.setImageResource(resourceId);
         if (((Pictograma)getItem(position)).isSeleccionado() && !this.alumno){
             view.setBackgroundColor(Color.BLUE);

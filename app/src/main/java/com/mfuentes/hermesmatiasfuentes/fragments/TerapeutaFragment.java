@@ -1,7 +1,6 @@
 package com.mfuentes.hermesmatiasfuentes.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,15 +19,15 @@ import com.mfuentes.hermesmatiasfuentes.model.Pictograma;
 
 import java.util.List;
 
-public class PlaceholderFragment extends Fragment {
+public class TerapeutaFragment extends Fragment {
     private List<Pictograma> pictogramas;
     private GridView gridview;
 
-    public PlaceholderFragment() {
+    public TerapeutaFragment() {
     }
 
-    public static PlaceholderFragment newInstance(Categoria categoria) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+    public static TerapeutaFragment newInstance(Categoria categoria) {
+        TerapeutaFragment fragment = new TerapeutaFragment();
         Bundle args = new Bundle();
         args.putInt("CATEGORIA",categoria.getNumero());
         fragment.setArguments(args);

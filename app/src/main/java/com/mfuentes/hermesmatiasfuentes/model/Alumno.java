@@ -6,6 +6,7 @@ import com.mfuentes.hermesmatiasfuentes.enums.Sexo;
 import com.mfuentes.hermesmatiasfuentes.enums.Solapa;
 import com.mfuentes.hermesmatiasfuentes.enums.Tamaño;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Alumno {
@@ -18,12 +19,12 @@ public class Alumno {
     private Tamaño tamPreferido;
     private List<Solapa> solapasHabilitadas;
 
-    public Alumno(String nombre, String apellido,Sexo sexo, Tamaño tamPreferido, List<Solapa> solapas){
+    public Alumno(String nombre, String apellido,Sexo sexo){
         this.nombre = nombre;
         this.apellido = apellido;
         this.sexo = sexo;
-        this.tamPreferido = tamPreferido;
-        this.solapasHabilitadas = solapas;
+        this.tamPreferido = Tamaño.MEDIANO;
+        this.solapasHabilitadas = new ArrayList<>();
     }
 
     public Alumno(Long id, String nombre, String apellido,Sexo sexo, Tamaño tamPreferido, List<Solapa> solapas){

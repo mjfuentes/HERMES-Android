@@ -2,6 +2,7 @@ package com.mfuentes.hermesmatiasfuentes.fragments;
 
 import android.app.Fragment;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 
 import com.mfuentes.hermesmatiasfuentes.DAO.PictogramaDAO;
 import com.mfuentes.hermesmatiasfuentes.Helpers.CurrentUser;
+import com.mfuentes.hermesmatiasfuentes.Helpers.JsonSender;
 import com.mfuentes.hermesmatiasfuentes.R;
 import com.mfuentes.hermesmatiasfuentes.adapters.PictogramaAdapter;
 import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
@@ -22,6 +24,15 @@ import java.util.List;
 
 public class CategoriaAlumnoFragment extends Fragment {
     private List<Pictograma> pictogramas;
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
     private Categoria categoria;
     public CategoriaAlumnoFragment() {
     }
@@ -46,7 +57,7 @@ public class CategoriaAlumnoFragment extends Fragment {
         gridview = (GridView) rootView.findViewById(R.id.pictogramas);
         gridview.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         gridview.setNumColumns(CurrentUser.getInstance().getAlumno().getTamPreferido().getColumnas());
-        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,true,this.categoria);
+        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,true,this.categoria,false);
         CurrentUser.getInstance().addObserver(adapter);
         gridview.setAdapter(adapter);
         ImageButton si = (ImageButton) rootView.findViewById(R.id.imagen_si);
@@ -89,7 +100,8 @@ public class CategoriaAlumnoFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // MANDAR DATOS AL SERVER
-                final int resourceId =  getActivity().getResources().getIdentifier(((Pictograma)adapter.getItem(position)).getAudio(), "raw", getActivity().getPackageName());
+                Pictograma pictograma = (Pictograma)adapter.getItem(position);
+                final int resourceId =  getActivity().getResources().getIdentifier(pictograma.getAudio(), "raw", getActivity().getPackageName());
                 MediaPlayer mp;
                 mp = MediaPlayer.create(getActivity(), resourceId);
                 mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -97,11 +109,13 @@ public class CategoriaAlumnoFragment extends Fragment {
                     public void onCompletion(MediaPlayer mp) {
                         mp.reset();
                         mp.release();
-                        mp=null;
+                        mp = null;
                     }
 
                 });
                 mp.start();
+                AsyncTask task = new JsonSender(pictograma.getDescripcion(),pictograma.getCategoria().toString(),pictograma.getCategoria().toString(),CurrentUser.getInstance().getAlumno().toString());
+                task.execute();
             }
         });
         return rootView;

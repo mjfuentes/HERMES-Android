@@ -72,9 +72,6 @@ public class AlumnoDAO extends Observable{
         values.put(AlumnoEntry.COLUMN_NAME_TAMANO_PREFERIDO, alumno.getTamPreferido().getNumero());
         long newRowId = db.insert(AlumnoEntry.TABLE_NAME, null, values);
         alumno.setId(newRowId);
-        ContentValues config = new ContentValues();
-        config.put("alumno_id", alumno.getId());
-        db.insert("configuracion", null, config);
         db.close();
         this.setChanged();
         this.notifyObservers();
@@ -112,7 +109,7 @@ public class AlumnoDAO extends Observable{
         return null;
     }
 
-    public Configuracion getConfig(Context context, Long id){
+    public Configuracion getConfig(Context context){
         DBHelper mDBHelper = new DBHelper(context);
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String[] projection = {
@@ -123,8 +120,8 @@ public class AlumnoDAO extends Observable{
         Cursor c = db.query(
                 "configuracion",
                 projection,
-                "alumno_id = ?",
-                new String[]{id.toString()},
+                null,
+                null,
                 null,
                 null,
                 null
@@ -179,14 +176,13 @@ public class AlumnoDAO extends Observable{
         notifyObservers();
     }
 
-    public void updateConfig(Context context, String field, Object value, Long id){
+    public void updateConfig(Context context, String field, Object value){
         DBHelper mDBHelper = new DBHelper(context);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         String valor = (String) value;
-        String strFilter = "alumno_id=" + id;
         ContentValues args = new ContentValues();
         args.put(field, valor);
-        db.update("configuracion", args, strFilter, null);
+        db.update("configuracion", args, null, null);
         db.close();
         setChanged();
         notifyObservers();

@@ -43,13 +43,13 @@ public class DBHelper extends SQLiteOpenHelper {
             "CREATE TABLE pictograma_alumno (_id INTEGER PRIMARY KEY, pictograma_id INTEGER, alumno_id INTEGER);";
 
     private static final String CREATE_TABLE_CONFIGURACION =
-            "CREATE TABLE configuracion (_id INTEGER PRIMARY KEY, alumno_id INTEGER, ip TEXT, puerto TEXT);";
+            "CREATE TABLE configuracion (_id INTEGER PRIMARY KEY, ip TEXT, puerto TEXT);";
 
     private static final String CREATE_TABLE_CATEGORIA_ALUMNO =
             "CREATE TABLE categoria_alumno (_id INTEGER PRIMARY KEY, categoria_id INTEGER, alumno_id INTEGER);";
 
     public DBHelper(Context context) {
-        super(context, "Hermes.db", null, 15);
+        super(context, "bbdd.db", null, 2);
         this.context = context;
     }
 
@@ -61,6 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CONFIGURACION);
         db.execSQL(CREATE_TABLE_CATEGORIA_ALUMNO);
         try {
+            populateConfiguracion(db);
             populatePictogramas(db);
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,5 +101,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
+
+    private void populateConfiguracion(SQLiteDatabase db){
+        String query = "INSERT INTO configuracion (ip,puerto) values('0.0.0.0','8080')";
+        db.execSQL(query);
     }
 }

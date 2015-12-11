@@ -96,7 +96,7 @@ public class PictogramaDAO {
 
         List<Pictograma> lista = new ArrayList<>();
         while (c.moveToNext()){
-            lista.add( new Pictograma(c.getLong(0),c.getString(3),c.getString(4), c.getString(2), categoria,true));
+            lista.add( new Pictograma(c.getLong(0),c.getString(3),c.getString(4), c.getString(1), categoria, true));
         }
         c.close();
         db.close();

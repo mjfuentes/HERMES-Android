@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.mfuentes.hermesmatiasfuentes.DAO.AlumnoDAO;
@@ -20,7 +18,6 @@ import com.mfuentes.hermesmatiasfuentes.enums.Tamaño;
 import com.mfuentes.hermesmatiasfuentes.model.Alumno;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -48,7 +45,8 @@ public class StartActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlumnoDAO.getInstance().insertAlumno(getBaseContext(), new Alumno("Matias", "Fuentes", Sexo.MASCULINO, Tamaño.MEDIANO, new ArrayList<Solapa>()));
+                Intent intent = new Intent(getApplicationContext(), NuevoAlumnoActivity.class);
+                startActivity(intent);
             }
         });
     }

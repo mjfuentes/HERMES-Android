@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.mfuentes.hermesmatiasfuentes.R;
 import com.mfuentes.hermesmatiasfuentes.enums.Categoria;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         setContentView(R.layout.activity_main);
         actionBar.invalidateOptionsMenu();
-        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
                             .setTabListener(tabListener));
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        this.finish();
+        return true;
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

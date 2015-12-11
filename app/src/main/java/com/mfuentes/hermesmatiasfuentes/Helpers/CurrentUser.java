@@ -77,6 +77,9 @@ public class CurrentUser extends Observable implements Observer{
     }
 
     public Configuracion getConfiguracion() {
+        if (configuracion == null){
+
+        }
         return configuracion;
     }
 
@@ -85,7 +88,7 @@ public class CurrentUser extends Observable implements Observer{
     }
 
     public void updateConfig(String field, Object value){
-        AlumnoDAO.getInstance().updateConfig(contexto, field, value, alumno.getId());
+        AlumnoDAO.getInstance().updateConfig(contexto, field, value);
     }
 
     public void updateCategoriasHabilitadas(Set<String> categorias){
@@ -123,6 +126,6 @@ public class CurrentUser extends Observable implements Observer{
     @Override
     public void update(Observable observable, Object data) {
         this.alumno = AlumnoDAO.getInstance().getAlumno(contexto,this.alumno.getId());
-        this.configuracion = AlumnoDAO.getInstance().getConfig(contexto,this.alumno.getId());
+        this.configuracion = AlumnoDAO.getInstance().getConfig(contexto);
     }
 }

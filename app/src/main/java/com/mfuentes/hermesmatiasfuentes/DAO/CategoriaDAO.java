@@ -9,7 +9,7 @@ import com.mfuentes.hermesmatiasfuentes.Helpers.DBHelper;
 import java.util.Observable;
 import java.util.Set;
 
-public class CategoriaDAO extends Observable{
+public class CategoriaDAO{
 
     private static CategoriaDAO instance;
     public static CategoriaDAO getInstance(){
@@ -41,7 +41,5 @@ public class CategoriaDAO extends Observable{
         for (String s:categorias){
             this.addCategoriaHabilitada(contexto, Integer.valueOf(s), id);
         }
-        setChanged();
-        notifyObservers();
     }
 }

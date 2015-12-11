@@ -33,12 +33,10 @@ public class CategoriaTerapeutaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.pictogramas = PictogramaDAO.getInstance().getPictogramas(getActivity(), CurrentUser.getInstance().getPictogramasVisibles());
-        GridView gridview;
-        View rootView;
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        gridview = (GridView) rootView.findViewById(R.id.gridView);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        GridView gridview = (GridView) rootView.findViewById(R.id.gridView);
         gridview.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,true,null);
+        final PictogramaAdapter adapter = new PictogramaAdapter(getActivity(), pictogramas,false,null,true);
         CurrentUser.getInstance().addObserver(adapter);
         gridview.setAdapter(adapter);
         gridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

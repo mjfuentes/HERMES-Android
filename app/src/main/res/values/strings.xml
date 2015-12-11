@@ -140,4 +140,9 @@
         <item>4</item>
     </string-array>
 
+    <string name="title_activity_nuevo_alumno">Nuevo Alumno</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

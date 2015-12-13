@@ -9,7 +9,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Activity.StartActivity"
     android:columnCount="2"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="#ffffff">
 
     <Button
         android:layout_width="wrap_content"
@@ -32,7 +33,9 @@
         android:layout_below="@+id/alumnos_title"
         android:layout_above="@+id/nuevo_alumno_button"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:touchscreenBlocksFocus="false"
+        android:theme="@style/AlertDialog.AppCompat.Light" />
 
     <FrameLayout
         android:layout_width="400dp"
@@ -46,8 +49,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:layout_gravity="left|center_vertical"
-            android:src="@drawable/cedica"
-            android:layout_margin="40dp" />
+            android:src="@drawable/cedica" />
     </FrameLayout>
 
     <TextView

@@ -49,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "CREATE TABLE categoria_alumno (_id INTEGER PRIMARY KEY, categoria_id INTEGER, alumno_id INTEGER);";
 
     public DBHelper(Context context) {
-        super(context, "bbdd.db", null, 2);
+        super(context, "database.db", null, 3);
         this.context = context;
     }
 

@@ -12,6 +12,7 @@
         android:theme="@style/Theme.AppCompat">
         <activity
             android:name=".Activity.StartActivity"
+            android:theme="@style/Theme.AppCompat.Light"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
